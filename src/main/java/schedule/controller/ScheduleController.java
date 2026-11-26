@@ -50,4 +50,16 @@ public class ScheduleController {
             @PathVariable Long Id, @RequestBody UpdateScheduleRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateSchedule(Id, request));
     }
+
+    // DELETE 요청을 통해 특정 일정 삭제
+    @DeleteMapping("/schedules/{Id}")
+    public ResponseEntity<Void> deleteSchedule(
+            // PathVariable을 통해 삭제할 일정 ID 전달받기
+            // RequestBody를 통해 비밀번호 전달받기
+            @PathVariable Long Id , @RequestBody DeleteScheduleRequest request){
+        // Service의 일정 삭제 메서드 호출
+        scheduleService.delete(Id, request);
+        // HTTP 상태 코드 204와 함께 응답 반환
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

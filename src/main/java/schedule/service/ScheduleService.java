@@ -18,7 +18,6 @@ public class ScheduleService {
     // 생성자 주입을 통해 Repository 연결
     private final ScheduleRepository scheduleRepository;
 
-
     // 일정 생성 메서드 및 트랜잭션 적용
     @Transactional
     public CreateScheduleResponse createSchedule(CreateScheduleRequest request){
@@ -117,5 +116,21 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt()
         );
+    }
+
+    // 일정 삭제 메서드 및 트랜잭션 적용
+    @Transactional
+    public void delete(Long id, DeleteScheduleRequest request) {
+        // Repository를 통해 삭제할 일정 조회
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                // 일정이 존재하지 않으면 예외 발생
+                () -> new IllegalArgumentException("없는 일정입니다.")
+        );
+        // 비밀번호가 일치하지 않으면 예외 발생
+        if(!Objects.equals(request.getPassword(), schedule.getPassword())){
+            throw new IllegalArgumentException(("비밀번호가 일치하지 않습니다."));
+        }
+        // Repository를 통해 일정 삭제
+        scheduleRepository.deleteById(id);
     }
 }
