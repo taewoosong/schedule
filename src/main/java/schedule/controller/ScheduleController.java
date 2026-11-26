@@ -37,4 +37,11 @@ public class ScheduleController {
         // 조회 결과를 HTTP 상태 코드 200과 함께 반환
         return ResponseEntity.status(HttpStatus.OK).body(choiceScheduleResponse);
     }
+
+    @GetMapping("/schedules")
+    public ResponseEntity<List<ChoiceScheduleResponse>> choiceSchedulesAll(@RequestParam(required = false) String author){
+        // Service를 호출하여 조회된 일정 목록을 List 변수에 저장
+        List<ChoiceScheduleResponse> schedules = scheduleService.choiceSchedulesAll(author);
+        return ResponseEntity.status(HttpStatus.OK).body(schedules);
+    }
 }

@@ -9,6 +9,10 @@ import schedule.dto.CreateScheduleResponse;
 import schedule.entity.Schedule;
 import schedule.repository.ScheduleRepository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -56,5 +60,39 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt()
         );
+    }
+
+    // 전체 일정 조회 및 읽기 전용 트랜잭션 적용
+    @Transactional(readOnly = true)
+    // 조회한 일정 목록을 저장할 List 변수 선언
+    public List<ChoiceScheduleResponse> choiceSchedulesAll(String author) {
+        // Repository를 통해 전체 일정 조회
+        List<Schedule> schedules = scheduleRepository.findAll();
+
+        // 조회 결과를 반환할 DTO 리스트 생성
+        List<ChoiceScheduleResponse> dtos = new ArrayList<>();
+
+        // 작성자명이 입력된 경우 일치하지 않는 일정을 목록에서 제외
+        if(author != null){
+            schedules.removeIf(schedule -> !author.equals(schedule.getAuthor()));
+        }
+
+        // 수정일 기준 내림차순 정렬
+        schedules.sort(Comparator.comparing(Schedule::getModifiedAt).reversed());
+
+        // 반복문을 통해 Entity를 Response DTO로 변환
+        for (Schedule schedule : schedules) {
+
+            ChoiceScheduleResponse dto = new ChoiceScheduleResponse(
+                    schedule.getId(),
+                    schedule.getTitle(),
+                    schedule.getContent(),
+                    schedule.getAuthor(),
+                    schedule.getCreatedAt(),
+                    schedule.getModifiedAt()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
     }
 }
