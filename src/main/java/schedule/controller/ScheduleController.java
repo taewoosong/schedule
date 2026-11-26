@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import schedule.dto.ChoiceScheduleResponse;
-import schedule.dto.CreateScheduleRequest;
-import schedule.dto.CreateScheduleResponse;
+import schedule.dto.*;
 import schedule.service.ScheduleService;
 
 import java.util.List;
@@ -43,5 +41,13 @@ public class ScheduleController {
         // Service를 호출하여 조회된 일정 목록을 List 변수에 저장
         List<ChoiceScheduleResponse> schedules = scheduleService.choiceSchedulesAll(author);
         return ResponseEntity.status(HttpStatus.OK).body(schedules);
+    }
+
+    // PATCH 요청을 통해 특정 일정 수정
+    @PatchMapping("/schedules/{Id}")
+    // PathVariable을 통해 수정할 일정 ID 전달받기
+    public ResponseEntity<UpdateScheduleResponse> updateSchedule(
+            @PathVariable Long Id, @RequestBody UpdateScheduleRequest request){
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateSchedule(Id, request));
     }
 }

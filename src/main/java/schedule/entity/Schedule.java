@@ -35,4 +35,10 @@ public class Schedule {
         this.author = author;
         this.password = password;
     }
+
+    // 일정의 제목과 작성자명 수정
+    public void updateSchedule(String title,String author){
+        this.title = title;
+        this.author = author;
+    }
 }

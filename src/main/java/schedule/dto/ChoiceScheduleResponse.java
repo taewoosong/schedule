@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-// Getter 자동 생성
+// Getter 어노테이션선언
 @Getter
 public class ChoiceScheduleResponse {
 

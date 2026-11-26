@@ -3,21 +3,21 @@ package schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import schedule.dto.ChoiceScheduleResponse;
-import schedule.dto.CreateScheduleRequest;
-import schedule.dto.CreateScheduleResponse;
+import schedule.dto.*;
 import schedule.entity.Schedule;
 import schedule.repository.ScheduleRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
     // 생성자 주입을 통해 Repository 연결
     private final ScheduleRepository scheduleRepository;
+
 
     // 일정 생성 메서드 및 트랜잭션 적용
     @Transactional
@@ -94,5 +94,28 @@ public class ScheduleService {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    // 일정 수정 메서드 및 트랜잭션 적용
+    @Transactional
+    public UpdateScheduleResponse updateSchedule(Long id, UpdateScheduleRequest request) {
+        // Repository를 통해 수정할 일정 조회
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("없는 일정입니다.")
+        );
+        // 비밀번호가 일치하지 않으면 예외 발생
+        if(!Objects.equals(request.getPassword(), schedule.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        // 일정의 제목과 작성자명 수정
+        schedule.updateSchedule(request.getTitle(), request.getAuthor());
+        return new UpdateScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getAuthor(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
     }
 }

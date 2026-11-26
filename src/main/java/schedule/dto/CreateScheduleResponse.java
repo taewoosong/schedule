@@ -3,7 +3,7 @@ package schedule.dto;
 import lombok.Getter;
 import java.time.LocalDateTime;
 
-// getter 이노테이션선언
+// getter 어노테이션선언
 @Getter
 public class CreateScheduleResponse {
     // 응답에 필요한 필드 선언하기 비밀번호 제외하고

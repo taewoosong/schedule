@@ -2,7 +2,7 @@ package schedule.dto;
 
 import lombok.Getter;
 
-// getter 이노테이션선언
+// getter 어노테이션선언
 @Getter
 public class CreateScheduleRequest {
     // 일정 생성 시 클라이언트로부터 전달받는 필드 선언
